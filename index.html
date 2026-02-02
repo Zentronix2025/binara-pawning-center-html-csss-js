@@ -1,0 +1,2735 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binara Pawning Center - Premium Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Add Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #FFD700;
+            /* Bright Gold */
+            --primary-dark: #D4AF37;
+            --primary-light: #FFF8DC;
+            --secondary: #1a1a1a;
+            --accent: #B8860B;
+            --light-bg: #f8f5f0;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 15px 40px rgba(212, 175, 55, 0.15);
+            --radius: 16px;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Custom Text Selection Color - Gold Theme */
+        ::selection {
+            background-color: var(--primary);
+            color: var(--secondary);
+            text-shadow: none;
+        }
+
+        ::-moz-selection {
+            background-color: var(--primary);
+            color: var(--secondary);
+            text-shadow: none;
+        }
+
+        /* Custom Scrollbar with Gold Theme */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--light-bg);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--accent), var(--primary-dark));
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8f5f0 0%, #f0ece5 100%);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Page Loader */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loader-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 8px solid transparent;
+        }
+
+        .loader-ring:nth-child(1) {
+            border-top: 8px solid var(--primary);
+            animation: spin 2s linear infinite;
+        }
+
+        .loader-ring:nth-child(2) {
+            border-right: 8px solid var(--accent);
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        .loader-ring:nth-child(3) {
+            border-bottom: 8px solid var(--primary-light);
+            animation: spin 1s linear infinite;
+        }
+
+        .loader-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--secondary);
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .loader-text {
+            color: var(--primary);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .loader-subtext {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            margin-left: 5px;
+        }
+
+        .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: dots 1.5s infinite ease-in-out;
+        }
+
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes dots {
+
+            0%,
+            100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+
+        /* Animated Background Elements */
+        .bg-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-element {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+        }
+
+        .bg-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .bg-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -50px;
+            left: -50px;
+        }
+
+        .bg-element:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            top: 40%;
+            left: 10%;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .container.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Sidebar - Premium Version */
+        .sidebar {
+            width: 280px;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px 0;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent));
+        }
+
+        .logo-container {
+            padding: 0 25px 30px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 22px;
+            color: var(--secondary);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .logo-text span {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        .nav-menu {
+            flex-grow: 1;
+            padding: 0 15px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--primary);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--primary);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-text {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--primary);
+            color: var(--secondary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 10px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .header-title h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .header-title h1 span {
+            color: var(--primary);
+            margin-left: 10px;
+        }
+
+        .header-title p {
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        /* Header Actions */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-input {
+            padding: 12px 20px 12px 45px;
+            border: none;
+            background: var(--card-bg);
+            border-radius: 50px;
+            width: 300px;
+            font-size: 0.95rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        /* Notification Bell */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .bell-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .bell-icon:hover {
+            background: var(--primary);
+            color: var(--secondary);
+            transform: translateY(-3px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--light-bg);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 350px;
+            box-shadow: var(--shadow-hover);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+            animation: dropdownFadeIn 0.3s ease;
+        }
+
+        .notification-dropdown.active {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .notification-count {
+            background: var(--primary);
+            color: var(--secondary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .notification-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: flex-start;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        .notification-item.unread {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 215, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-right: 15px;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex-grow: 1;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 5px;
+            color: var(--secondary);
+        }
+
+        .notification-text {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .notification-footer {
+            padding: 15px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .mark-all-read {
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mark-all-read:hover {
+            text-decoration: underline;
+        }
+
+        /* User Profile */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-right: 12px;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .user-profile:hover .user-avatar {
+            transform: scale(1.05);
+        }
+
+        .user-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .user-info p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: 70px;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            width: 280px;
+            box-shadow: var(--shadow-hover);
+            z-index: 1000;
+            display: none;
+            overflow: hidden;
+            animation: dropdownFadeIn 0.3s ease;
+        }
+
+        .user-dropdown.active {
+            display: block;
+        }
+
+        .user-dropdown-header {
+            padding: 25px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .user-dropdown-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-dropdown-info h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .user-dropdown-info p {
+            font-size: 0.9rem;
+            color: rgba(0, 0, 0, 0.7);
+        }
+
+        .user-dropdown-menu {
+            padding: 10px 0;
+        }
+
+        .user-dropdown-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--text);
+            text-decoration: none;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .user-dropdown-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+            color: var(--primary);
+        }
+
+        .user-dropdown-icon {
+            width: 24px;
+            text-align: center;
+            margin-right: 15px;
+            color: var(--text-light);
+        }
+
+        .user-dropdown-item:hover .user-dropdown-icon {
+            color: var(--primary);
+        }
+
+        .user-dropdown-divider {
+            height: 1px;
+            background: rgba(0, 0, 0, 0.08);
+            margin: 10px 0;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .stat-change {
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-change.positive {
+            color: #2ecc71;
+        }
+
+        .stat-change.negative {
+            color: #e74c3c;
+        }
+
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 15px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .chart-placeholder {
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f9f9f9, #f0f0f0);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-placeholder::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Chart Control Buttons */
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .chart-btn {
+            padding: 8px 15px;
+            background: var(--primary-light);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chart-btn:hover {
+            background: var(--primary);
+            color: var(--secondary);
+        }
+
+        .chart-btn.active {
+            background: var(--primary);
+            color: var(--secondary);
+            font-weight: 600;
+        }
+
+        /* Recent Transactions */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .transactions-table {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(to right, var(--primary-light), var(--primary));
+        }
+
+        th {
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 215, 0, 0.05);
+        }
+
+        td {
+            padding: 18px 20px;
+            color: var(--text);
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .customer-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-weight: 600;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+
+        .customer-name {
+            font-weight: 500;
+        }
+
+        .item-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: rgba(255, 215, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            margin-right: 12px;
+            font-size: 1rem;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-active {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .status-pending {
+            background: rgba(241, 196, 15, 0.1);
+            color: #f1c40f;
+        }
+
+        .status-expired {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-view {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        .action-edit {
+            background: rgba(46, 204, 113, 0.1);
+            color: #2ecc71;
+        }
+
+        .action-renew {
+            background: rgba(155, 89, 182, 0.1);
+            color: #9b59b6;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .action-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .action-desc {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 80px;
+            }
+
+            .logo-text,
+            .nav-text,
+            .nav-badge {
+                display: none;
+            }
+
+            .logo-container {
+                padding: 0 15px 30px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .logo-icon {
+                margin-right: 0;
+            }
+
+            .nav-item {
+                justify-content: center;
+                padding: 16px;
+            }
+
+            .nav-icon {
+                margin-right: 0;
+                font-size: 1.4rem;
+            }
+
+            .search-input {
+                width: 200px;
+            }
+
+            .notification-dropdown {
+                width: 300px;
+                right: -50px;
+            }
+
+            .user-dropdown {
+                right: -50px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 15px 0;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 10px;
+            }
+
+            .nav-item {
+                flex-direction: column;
+                padding: 10px 15px;
+                margin-bottom: 0;
+                margin-right: 10px;
+                min-width: 70px;
+            }
+
+            .nav-icon {
+                margin-right: 0;
+                margin-bottom: 5px;
+                font-size: 1.2rem;
+            }
+
+            .nav-text {
+                font-size: 0.8rem;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                margin-top: 20px;
+                justify-content: space-between;
+            }
+
+            .search-input {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .notification-dropdown {
+                width: 280px;
+                right: -100px;
+            }
+
+            .user-dropdown {
+                right: -100px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Page Loader -->
+    <div class="page-loader" id="pageLoader">
+        <div class="loader-container">
+            <div class="loader-logo">
+                <i class="fas fa-gem"></i>
+            </div>
+            <div class="loader">
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+            </div>
+            <div class="loader-text">Binara Pawning Center</div>
+            <div class="loader-subtext">Loading Dashboard
+                <span class="loading-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animated Background Elements -->
+    <div class="bg-elements">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
+
+    <div class="container" id="mainContainer">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <a href="#" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Binara</h1>
+                        <span>Pawning Center</span>
+                    </div>
+                </a>
+            </div>
+
+            <div class="nav-menu">
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <div class="nav-text">Dashboard</div>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-ring"></i>
+                    </div>
+                    <div class="nav-text">Pawn Items</div>
+                    <!-- <div class="nav-badge">142</div> -->
+                </a>
+
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="nav-text">Customers</div>
+                    <!-- <div class="nav-badge">89</div> -->
+                </a>
+
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="nav-text">Transactions</div>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="nav-text">Appointments</div>
+                    <!-- <div class="nav-badge">12</div> -->
+                </a>
+
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="nav-text">Analytics</div>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <div class="nav-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    <div class="nav-text">Settings</div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <div class="header-title">
+                    <h1>Dashboard</h1>
+                    <p>Manage your pawn center operations efficiently</p>
+                </div>
+
+                <div class="header-actions">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" placeholder="Search items, customers, transactions...">
+                    </div>
+
+                    <!-- Notification Bell -->
+                    <div class="notification-bell" id="notificationBell">
+                        <div class="bell-icon">
+                            <i class="fas fa-bell"></i>
+                            <div class="notification-badge" id="notificationBadge">3</div>
+                        </div>
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <h3>Notifications</h3>
+                                <span class="notification-count" id="notificationCount">3 new</span>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <!-- Notifications will be populated by JavaScript -->
+                            </div>
+                            <div class="notification-footer">
+                                <button class="mark-all-read" id="markAllRead">Mark all as read</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Profile -->
+                    <div class="user-profile" id="userProfile">
+                        <div class="user-avatar">
+                            AU
+                        </div>
+                        <div class="user-info">
+                            <h3>Admin User</h3>
+                            <p>Super Administrator</p>
+                        </div>
+                        <div class="user-dropdown" id="userDropdown">
+                            <div class="user-dropdown-header">
+                                <div class="user-dropdown-avatar">
+                                    AU
+                                </div>
+                                <div class="user-dropdown-info">
+                                    <h3>Admin User</h3>
+                                    <p>admin@binara.com</p>
+                                </div>
+                            </div>
+                            <div class="user-dropdown-menu">
+                                <div class="user-dropdown-item" id="viewProfile">
+                                    <div class="user-dropdown-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div>View Profile</div>
+                                </div>
+                                <div class="user-dropdown-item" id="editProfile">
+                                    <div class="user-dropdown-icon">
+                                        <i class="fas fa-edit"></i>
+                                    </div>
+                                    <div>Edit Profile</div>
+                                </div>
+                                <div class="user-dropdown-item" id="settings">
+                                    <div class="user-dropdown-icon">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <div>Settings</div>
+                                </div>
+                                <div class="user-dropdown-divider"></div>
+                                <div class="user-dropdown-item" id="logout">
+                                    <div class="user-dropdown-icon">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                    </div>
+                                    <div>Logout</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Total Value</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">$287.5K</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 8.2% increase
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Customers</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">50</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 5.3% increase
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Active Pawns</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-gem"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">142</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 12.5% increase
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Complete Pawns</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">92</div>
+                    <div class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 9.5% increase
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-title">Expiring Soon</div>
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-change negative">
+                        <i class="fas fa-exclamation-circle"></i> Needs attention
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title">Monthly Performance</div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: var(--primary);"></div>
+                                <span>Gold Items</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: var(--accent);"></div>
+                                <span>Other Items</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                    <div class="chart-controls">
+                        <button class="chart-btn active" data-chart-type="bar">Bar</button>
+                        <button class="chart-btn" data-chart-type="line">Line</button>
+                        <button class="chart-btn" data-chart-type="area">Area</button>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <div class="chart-title">Item Categories</div>
+                    </div>
+                    <div class="chart-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-exchange-alt"></i> Recent Transactions
+                </div>
+                <button class="action-btn action-view">View All</button>
+            </div>
+
+            <div class="transactions-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Customer</th>
+                            <th>Item</th>
+                            <th>Loan Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="customer-info">
+                                    <div class="customer-avatar">JS</div>
+                                    <div class="customer-name">John Smith</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item-info">
+                                    <div class="item-icon">
+                                        <i class="fas fa-ring"></i>
+                                    </div>
+                                    <div>Gold Necklace 22K</div>
+                                </div>
+                            </td>
+                            <td><strong>$1,500</strong></td>
+                            <td>15 Aug 2023</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn action-view"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn action-edit"><i class="fas fa-edit"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="customer-info">
+                                    <div class="customer-avatar">MG</div>
+                                    <div class="customer-name">Maria Garcia</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item-info">
+                                    <div class="item-icon">
+                                        <i class="far fa-gem"></i>
+                                    </div>
+                                    <div>Diamond Ring</div>
+                                </div>
+                            </td>
+                            <td><strong>$2,800</strong></td>
+                            <td>10 Aug 2023</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn action-view"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn action-edit"><i class="fas fa-edit"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="customer-info">
+                                    <div class="customer-avatar">RJ</div>
+                                    <div class="customer-name">Robert Johnson</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item-info">
+                                    <div class="item-icon">
+                                        <i class="fas fa-link"></i>
+                                    </div>
+                                    <div>Gold Bracelet 18K</div>
+                                </div>
+                            </td>
+                            <td><strong>$950</strong></td>
+                            <td>22 Jul 2023</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn action-view"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn action-edit"><i class="fas fa-edit"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="customer-info">
+                                    <div class="customer-avatar">SW</div>
+                                    <div class="customer-name">Sarah Williams</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item-info">
+                                    <div class="item-icon">
+                                        <i class="far fa-circle"></i>
+                                    </div>
+                                    <div>Gold Earrings</div>
+                                </div>
+                            </td>
+                            <td><strong>$650</strong></td>
+                            <td>05 Jun 2023</td>
+                            <td><span class="status-badge status-expired">Expired</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn action-view"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn action-renew">Renew</button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <div class="customer-info">
+                                    <div class="customer-avatar">JB</div>
+                                    <div class="customer-name">James Brown</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="item-info">
+                                    <div class="item-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div>Gold Watch</div>
+                                </div>
+                            </td>
+                            <td><strong>$1,200</strong></td>
+                            <td>28 Aug 2023</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="action-btn action-view"><i class="fas fa-eye"></i></button>
+                                    <button class="action-btn action-edit"><i class="fas fa-edit"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="section-header" style="margin-top: 40px;">
+                <div class="section-title">
+                    <i class="fas fa-bolt"></i> Quick Actions
+                </div>
+            </div>
+
+            <div class="quick-actions">
+                <div class="action-card" id="addItemAction">
+                    <div class="action-icon">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                    <div class="action-title">Add New Item</div>
+                    <div class="action-desc">Register a new pawned item</div>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="action-title">Add Customer</div>
+                    <div class="action-desc">Register a new customer</div>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="action-title">Generate Report</div>
+                    <div class="action-desc">Create monthly report</div>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="action-title">Send Notifications</div>
+                    <div class="action-desc">Notify expiring items</div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="footer">
+                <p>© 2023 Binara Pawning Center. All rights reserved. | Version 2.0.0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const pageLoader = document.getElementById('pageLoader');
+        const mainContainer = document.getElementById('mainContainer');
+        const navItems = document.querySelectorAll('.nav-item');
+        const actionCards = document.querySelectorAll('.action-card');
+        const actionButtons = document.querySelectorAll('.action-btn');
+        const searchInput = document.querySelector('.search-input');
+
+        // Header Elements
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const notificationCount = document.getElementById('notificationCount');
+        const notificationList = document.getElementById('notificationList');
+        const markAllReadBtn = document.getElementById('markAllRead');
+        const userProfile = document.getElementById('userProfile');
+        const userDropdown = document.getElementById('userDropdown');
+
+        // Chart instances
+        let monthlyChartInstance = null;
+        let categoryChartInstance = null;
+        let currentChartType = 'bar';
+
+        // Notification data
+        const notifications = [
+            {
+                id: 1,
+                title: "Item Expiring Soon",
+                message: "Gold necklace from John Smith is expiring in 3 days",
+                time: "10 minutes ago",
+                icon: "fas fa-clock",
+                unread: true,
+                type: "warning"
+            },
+            {
+                id: 2,
+                title: "New Pawn Transaction",
+                message: "Maria Garcia pawned a diamond ring for $2,800",
+                time: "1 hour ago",
+                icon: "fas fa-exchange-alt",
+                unread: true,
+                type: "success"
+            },
+            {
+                id: 3,
+                title: "Payment Received",
+                message: "Payment of $450 received from Robert Johnson",
+                time: "2 hours ago",
+                icon: "fas fa-dollar-sign",
+                unread: true,
+                type: "info"
+            },
+            {
+                id: 4,
+                title: "Customer Registration",
+                message: "New customer Sarah Williams registered in the system",
+                time: "5 hours ago",
+                icon: "fas fa-user-plus",
+                unread: false,
+                type: "info"
+            },
+            {
+                id: 5,
+                title: "System Update",
+                message: "Dashboard performance has been optimized",
+                time: "1 day ago",
+                icon: "fas fa-sync-alt",
+                unread: false,
+                type: "info"
+            }
+        ];
+
+        // Page Loader Functionality
+        window.addEventListener('load', function () {
+            // Simulate loading time for better UX
+            setTimeout(() => {
+                // Hide loader
+                pageLoader.style.opacity = '0';
+                pageLoader.style.visibility = 'hidden';
+
+                // Show main content with animation
+                setTimeout(() => {
+                    mainContainer.classList.add('loaded');
+                }, 300);
+            }, 2000); // 2 seconds loading time
+
+            // Initialize date in header
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const formattedDate = today.toLocaleDateString('en-US', options);
+            document.querySelector('.header-title p').textContent = `Today is ${formattedDate}`;
+        });
+
+        // Initialize Charts after page is loaded
+        window.addEventListener('DOMContentLoaded', function () {
+            setTimeout(() => {
+                initializeCharts();
+                initializeNotifications();
+                initializeUserProfile();
+            }, 2100); // Wait for loader to finish
+        });
+
+        // Navigation item click handler
+        navItems.forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                // Show loading animation for section change
+                mainContainer.style.opacity = '0.7';
+                mainContainer.style.transform = 'translateY(10px)';
+
+                // Remove active class from all items
+                navItems.forEach(nav => nav.classList.remove('active'));
+
+                // Add active class to clicked item
+                this.classList.add('active');
+
+                // Animation effect
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+
+                // Update page title based on clicked item
+                const itemName = this.querySelector('.nav-text').textContent;
+                document.querySelector('.header-title h1').innerHTML = `${itemName}`;
+
+                // Simulate loading new section
+                setTimeout(() => {
+                    mainContainer.style.opacity = '1';
+                    mainContainer.style.transform = 'translateY(0)';
+                }, 500);
+
+                // Show notification for demo
+                if (itemName !== 'Dashboard') {
+                    showNotification(`Loading ${itemName} section...`, 'info');
+                }
+            });
+        });
+
+        // Action cards click handler
+        actionCards.forEach(card => {
+            card.addEventListener('click', function () {
+                const actionName = this.querySelector('.action-title').textContent;
+
+                // Animation
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+
+                // Show appropriate action
+                if (actionName === 'Add New Item') {
+                    showAddItemModal();
+                } else if (actionName === 'Add Customer') {
+                    showNotification('Opening customer registration form...', 'info');
+                } else if (actionName === 'Generate Report') {
+                    showNotification('Generating monthly report...', 'success');
+                } else if (actionName === 'Send Notifications') {
+                    showNotification('Sending notifications for expiring items...', 'info');
+                }
+            });
+        });
+
+        // Table action buttons
+        actionButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const row = this.closest('tr');
+                const customerName = row.querySelector('.customer-name').textContent;
+                const itemName = row.querySelector('.item-info > div:nth-child(2)').textContent;
+
+                if (this.classList.contains('action-view')) {
+                    showNotification(`Viewing details for ${itemName} (${customerName})`, 'info');
+                } else if (this.classList.contains('action-edit')) {
+                    showNotification(`Editing ${itemName} (${customerName})`, 'info');
+                } else if (this.querySelector('.action-renew')) {
+                    showNotification(`Renewing pawn for ${itemName} (${customerName})`, 'success');
+                }
+            });
+        });
+
+        // Search functionality
+        searchInput.addEventListener('keyup', function (e) {
+            if (e.key === 'Enter') {
+                const query = this.value.trim();
+                if (query) {
+                    showNotification(`Searching for "${query}"...`, 'info');
+                    // In a real app, you would filter the table or make an API call
+                }
+            }
+        });
+
+        // Initialize Notifications
+        function initializeNotifications() {
+            // Populate notification list
+            updateNotificationList();
+
+            // Toggle notification dropdown
+            notificationBell.addEventListener('click', function (e) {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('active');
+                userDropdown.classList.remove('active');
+            });
+
+            // Mark all as read
+            markAllReadBtn.addEventListener('click', function () {
+                notifications.forEach(notification => {
+                    notification.unread = false;
+                });
+                updateNotificationList();
+                updateNotificationBadge();
+                showNotification('All notifications marked as read', 'success');
+            });
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!notificationBell.contains(e.target)) {
+                    notificationDropdown.classList.remove('active');
+                }
+                if (!userProfile.contains(e.target)) {
+                    userDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Update notification list
+        function updateNotificationList() {
+            notificationList.innerHTML = '';
+            let unreadCount = 0;
+
+            notifications.forEach(notification => {
+                if (notification.unread) unreadCount++;
+
+                const notificationItem = document.createElement('div');
+                notificationItem.className = `notification-item ${notification.unread ? 'unread' : ''}`;
+                notificationItem.innerHTML = `
+                    <div class="notification-icon">
+                        <i class="${notification.icon}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notification.title}</div>
+                        <div class="notification-text">${notification.message}</div>
+                        <div class="notification-time">${notification.time}</div>
+                    </div>
+                `;
+
+                notificationItem.addEventListener('click', function () {
+                    if (notification.unread) {
+                        notification.unread = false;
+                        updateNotificationList();
+                        updateNotificationBadge();
+                        showNotification(`Notification marked as read: ${notification.title}`, 'info');
+                    }
+                });
+
+                notificationList.appendChild(notificationItem);
+            });
+
+            // Update badge and count
+            notificationBadge.textContent = unreadCount;
+            notificationCount.textContent = unreadCount === 0 ? 'No new' : `${unreadCount} new`;
+
+            if (unreadCount === 0) {
+                notificationBadge.style.display = 'none';
+            } else {
+                notificationBadge.style.display = 'flex';
+            }
+        }
+
+        // Update notification badge
+        function updateNotificationBadge() {
+            const unreadCount = notifications.filter(n => n.unread).length;
+            notificationBadge.textContent = unreadCount;
+            notificationCount.textContent = unreadCount === 0 ? 'No new' : `${unreadCount} new`;
+
+            if (unreadCount === 0) {
+                notificationBadge.style.display = 'none';
+            } else {
+                notificationBadge.style.display = 'flex';
+            }
+        }
+
+        // Initialize User Profile
+        function initializeUserProfile() {
+            // Toggle user dropdown
+            userProfile.addEventListener('click', function (e) {
+                e.stopPropagation();
+                userDropdown.classList.toggle('active');
+                notificationDropdown.classList.remove('active');
+            });
+
+            // User dropdown actions
+            document.getElementById('viewProfile').addEventListener('click', function () {
+                showNotification('Loading user profile...', 'info');
+                userDropdown.classList.remove('active');
+            });
+
+            document.getElementById('editProfile').addEventListener('click', function () {
+                showNotification('Opening profile editor...', 'info');
+                userDropdown.classList.remove('active');
+            });
+
+            document.getElementById('settings').addEventListener('click', function () {
+                showNotification('Opening settings...', 'info');
+                userDropdown.classList.remove('active');
+            });
+
+            document.getElementById('logout').addEventListener('click', function () {
+                showNotification('Logging out...', 'info');
+                setTimeout(() => {
+                    showNotification('Successfully logged out', 'success');
+                }, 1000);
+                userDropdown.classList.remove('active');
+            });
+        }
+
+        // Initialize Charts
+        function initializeCharts() {
+            // Monthly Performance Chart (Line/Bar Chart)
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+
+            // Monthly data for the last 6 months
+            const months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'];
+            const goldItemsData = [12000, 19000, 15000, 25000, 22000, 28750];
+            const otherItemsData = [8000, 11000, 9000, 13000, 12000, 14000];
+
+            // Create gradient for the chart
+            const goldGradient = monthlyCtx.createLinearGradient(0, 0, 0, 400);
+            goldGradient.addColorStop(0, 'rgba(255, 215, 0, 0.8)');
+            goldGradient.addColorStop(1, 'rgba(255, 215, 0, 0.1)');
+
+            const accentGradient = monthlyCtx.createLinearGradient(0, 0, 0, 400);
+            accentGradient.addColorStop(0, 'rgba(184, 134, 11, 0.8)');
+            accentGradient.addColorStop(1, 'rgba(184, 134, 11, 0.1)');
+
+            // For area chart gradients
+            const goldAreaGradient = monthlyCtx.createLinearGradient(0, 0, 0, 400);
+            goldAreaGradient.addColorStop(0, 'rgba(255, 215, 0, 0.4)');
+            goldAreaGradient.addColorStop(0.5, 'rgba(255, 215, 0, 0.2)');
+            goldAreaGradient.addColorStop(1, 'rgba(255, 215, 0, 0.05)');
+
+            const accentAreaGradient = monthlyCtx.createLinearGradient(0, 0, 0, 400);
+            accentAreaGradient.addColorStop(0, 'rgba(184, 134, 11, 0.4)');
+            accentAreaGradient.addColorStop(0.5, 'rgba(184, 134, 11, 0.2)');
+            accentAreaGradient.addColorStop(1, 'rgba(184, 134, 11, 0.05)');
+
+            // Base dataset configuration
+            const baseDatasets = [
+                {
+                    label: 'Gold Items',
+                    data: goldItemsData,
+                    backgroundColor: goldGradient,
+                    borderColor: 'rgba(255, 215, 0, 1)',
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    borderSkipped: false,
+                    fill: false, // Default for bar/line charts
+                    tension: 0.4
+                },
+                {
+                    label: 'Other Items',
+                    data: otherItemsData,
+                    backgroundColor: accentGradient,
+                    borderColor: 'rgba(184, 134, 11, 1)',
+                    borderWidth: 2,
+                    borderRadius: 5,
+                    borderSkipped: false,
+                    fill: false, // Default for bar/line charts
+                    tension: 0.4
+                }
+            ];
+
+            // Monthly chart configuration
+            const monthlyChartConfig = {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: baseDatasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index',
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 215, 0, 0.5)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.dataset.label}: $${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false,
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: 'var(--text-light)'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)',
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: 'var(--text-light)',
+                                callback: function (value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Create the monthly chart
+            monthlyChartInstance = new Chart(monthlyCtx, monthlyChartConfig);
+
+            // Item Categories Chart (Doughnut Chart)
+            const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+
+            // Category data
+            const categories = ['Gold Jewelry', 'Diamonds', 'Watches', 'Electronics', 'Other'];
+            const categoryData = [65, 15, 10, 5, 5];
+            const categoryColors = [
+                'rgba(255, 215, 0, 0.8)',
+                'rgba(184, 134, 11, 0.8)',
+                'rgba(212, 175, 55, 0.8)',
+                'rgba(255, 248, 220, 0.8)',
+                'rgba(245, 245, 220, 0.8)'
+            ];
+            const categoryBorderColors = [
+                'rgba(255, 215, 0, 1)',
+                'rgba(184, 134, 11, 1)',
+                'rgba(212, 175, 55, 1)',
+                'rgba(255, 248, 220, 1)',
+                'rgba(245, 245, 220, 1)'
+            ];
+
+            // Category chart configuration
+            const categoryChartConfig = {
+                type: 'doughnut',
+                data: {
+                    labels: categories,
+                    datasets: [{
+                        data: categoryData,
+                        backgroundColor: categoryColors,
+                        borderColor: categoryBorderColors,
+                        borderWidth: 2,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    size: 11
+                                },
+                                color: 'var(--text-light)'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 215, 0, 0.5)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.label}: ${context.parsed}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Create the category chart
+            categoryChartInstance = new Chart(categoryCtx, categoryChartConfig);
+
+            // Add chart type switcher functionality
+            const chartButtons = document.querySelectorAll('.chart-btn');
+            chartButtons.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    // Remove active class from all buttons
+                    chartButtons.forEach(b => b.classList.remove('active'));
+
+                    // Add active class to clicked button
+                    this.classList.add('active');
+
+                    // Get chart type
+                    const chartType = this.getAttribute('data-chart-type');
+                    currentChartType = chartType;
+
+                    // Update chart based on type
+                    updateChartType(chartType);
+
+                    showNotification(`Chart view changed to ${chartType} chart`, 'info');
+                });
+            });
+
+            // Function to update chart type
+            function updateChartType(chartType) {
+                // Destroy the current chart instance
+                monthlyChartInstance.destroy();
+
+                // Get the canvas context again
+                const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+
+                // Configure datasets based on chart type
+                const datasets = JSON.parse(JSON.stringify(baseDatasets));
+
+                if (chartType === 'bar') {
+                    datasets[0].type = 'bar';
+                    datasets[1].type = 'bar';
+                    datasets[0].backgroundColor = goldGradient;
+                    datasets[1].backgroundColor = accentGradient;
+                    datasets[0].fill = false;
+                    datasets[1].fill = false;
+                    datasets[0].borderRadius = 5;
+                    datasets[1].borderRadius = 5;
+                } else if (chartType === 'line') {
+                    datasets[0].type = 'line';
+                    datasets[1].type = 'line';
+                    datasets[0].backgroundColor = 'transparent';
+                    datasets[1].backgroundColor = 'transparent';
+                    datasets[0].fill = false;
+                    datasets[1].fill = false;
+                    datasets[0].tension = 0.4;
+                    datasets[1].tension = 0.4;
+                    datasets[0].borderRadius = 0;
+                    datasets[1].borderRadius = 0;
+                } else if (chartType === 'area') {
+                    datasets[0].type = 'line';
+                    datasets[1].type = 'line';
+                    datasets[0].backgroundColor = goldAreaGradient;
+                    datasets[1].backgroundColor = accentAreaGradient;
+                    datasets[0].fill = true;
+                    datasets[1].fill = true;
+                    datasets[0].tension = 0.4;
+                    datasets[1].tension = 0.4;
+                    datasets[0].borderRadius = 0;
+                    datasets[1].borderRadius = 0;
+                }
+
+                // Create new chart configuration
+                const newChartConfig = {
+                    type: chartType === 'bar' ? 'bar' : 'line',
+                    data: {
+                        labels: months,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: {
+                            intersect: false,
+                            mode: 'index',
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: 'rgba(255, 215, 0, 0.5)',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function (context) {
+                                        return `${context.dataset.label}: $${context.parsed.y.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false,
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: 'var(--text-light)'
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.05)',
+                                    drawBorder: false
+                                },
+                                ticks: {
+                                    color: 'var(--text-light)',
+                                    callback: function (value) {
+                                        return '$' + value.toLocaleString();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+
+                // Create new chart instance
+                monthlyChartInstance = new Chart(monthlyCtx, newChartConfig);
+            }
+
+            // Add animation to charts when they come into view
+            const chartWrappers = document.querySelectorAll('.chart-wrapper');
+            chartWrappers.forEach(wrapper => {
+                wrapper.addEventListener('mouseenter', function () {
+                    this.style.transform = 'scale(1.01)';
+                    this.style.transition = 'transform 0.3s ease';
+                });
+
+                wrapper.addEventListener('mouseleave', function () {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Add click functionality to chart sections
+            const categoryChartCanvas = document.getElementById('categoryChart');
+            categoryChartCanvas.style.cursor = 'pointer';
+            categoryChartCanvas.addEventListener('click', function (evt) {
+                const points = categoryChartInstance.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+                if (points.length) {
+                    const firstPoint = points[0];
+                    const label = categoryChartInstance.data.labels[firstPoint.index];
+                    const value = categoryChartInstance.data.datasets[firstPoint.datasetIndex].data[firstPoint.index];
+                    showNotification(`Selected category: ${label} (${value}% of total items)`, 'success');
+                }
+            });
+        }
+
+        // Add item modal function
+        function showAddItemModal() {
+            // Create modal
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                backdrop-filter: blur(5px);
+            `;
+
+            modal.innerHTML = `
+                <div class="modal-content" style="
+                    background: white;
+                    border-radius: var(--radius);
+                    width: 90%;
+                    max-width: 500px;
+                    padding: 30px;
+                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+                    animation: modalFadeIn 0.3s ease;
+                ">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                        <h2 style="font-size: 1.5rem; color: var(--secondary);">
+                            <i class="fas fa-gem" style="color: var(--primary); margin-right: 10px;"></i>
+                            Add New Pawn Item
+                        </h2>
+                        <button class="close-modal" style="
+                            background: transparent;
+                            border: none;
+                            font-size: 1.5rem;
+                            cursor: pointer;
+                            color: var(--text-light);
+                        ">&times;</button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Item Name</label>
+                            <input type="text" placeholder="e.g. Gold Necklace 22K" style="
+                                width: 100%;
+                                padding: 12px 15px;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                                font-size: 1rem;
+                            ">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Item Type</label>
+                                <select style="
+                                    width: 100%;
+                                    padding: 12px 15px;
+                                    border: 1px solid #ddd;
+                                    border-radius: 8px;
+                                    font-size: 1rem;
+                                ">
+                                    <option>Gold Jewelry</option>
+                                    <option>Diamond</option>
+                                    <option>Watch</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label style="display: block; margin-bottom: 8px; font-weight: 500;">Karat</label>
+                                <select style="
+                                    width: 100%;
+                                    padding: 12px 15px;
+                                    border: 1px solid #ddd;
+                                    border-radius: 8px;
+                                    font-size: 1rem;
+                                ">
+                                    <option>24K</option>
+                                    <option>22K</option>
+                                    <option>18K</option>
+                                    <option>14K</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500;">Loan Amount ($)</label>
+                            <input type="number" placeholder="1500" style="
+                                width: 100%;
+                                padding: 12px 15px;
+                                border: 1px solid #ddd;
+                                border-radius: 8px;
+                                font-size: 1rem;
+                            ">
+                        </div>
+                        
+                        <button class="submit-btn" style="
+                            width: 100%;
+                            padding: 14px;
+                            background: linear-gradient(135deg, var(--primary), var(--accent));
+                            color: var(--secondary);
+                            border: none;
+                            border-radius: 8px;
+                            font-weight: 600;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            transition: var(--transition);
+                        ">Add Item to System</button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Add animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes modalFadeIn {
+                    from { opacity: 0; transform: translateY(-30px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Close modal handlers
+            const closeBtn = modal.querySelector('.close-modal');
+            closeBtn.addEventListener('click', () => {
+                modal.style.animation = 'modalFadeIn 0.3s ease reverse';
+                setTimeout(() => {
+                    document.body.removeChild(modal);
+                }, 250);
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.animation = 'modalFadeIn 0.3s ease reverse';
+                    setTimeout(() => {
+                        document.body.removeChild(modal);
+                    }, 250);
+                }
+            });
+
+            // Submit button handler
+            const submitBtn = modal.querySelector('.submit-btn');
+            submitBtn.addEventListener('click', () => {
+                const itemName = modal.querySelector('input[type="text"]').value;
+                const loanAmount = modal.querySelector('input[type="number"]').value;
+
+                if (itemName && loanAmount) {
+                    showNotification(`"${itemName}" added successfully with loan amount $${loanAmount}`, 'success');
+
+                    // Update stats for demo
+                    const activePawns = document.querySelector('.stat-card:nth-child(3) .stat-value');
+                    activePawns.textContent = parseInt(activePawns.textContent) + 1;
+
+                    const totalValue = document.querySelector('.stat-card:nth-child(1) .stat-value');
+                    const currentValue = parseFloat(totalValue.textContent.replace('$', '').replace('K', '')) * 1000;
+                    const newValue = currentValue + parseInt(loanAmount);
+                    totalValue.textContent = `$${(newValue / 1000).toFixed(1)}K`;
+
+                    // Update charts with new data (simulate)
+                    if (monthlyChartInstance && categoryChartInstance) {
+                        // Update the last month's value
+                        const lastIndex = monthlyChartInstance.data.datasets[0].data.length - 1;
+                        monthlyChartInstance.data.datasets[0].data[lastIndex] += parseInt(loanAmount) * 0.7; // Assume 70% is gold
+                        monthlyChartInstance.data.datasets[1].data[lastIndex] += parseInt(loanAmount) * 0.3; // Assume 30% is other
+                        monthlyChartInstance.update();
+
+                        // Update category percentages slightly
+                        categoryChartInstance.data.datasets[0].data[0] += 1;
+                        categoryChartInstance.data.datasets[0].data[categoryChartInstance.data.datasets[0].data.length - 1] -= 1;
+                        categoryChartInstance.update();
+                    }
+
+                    // Close modal
+                    modal.style.animation = 'modalFadeIn 0.3s ease reverse';
+                    setTimeout(() => {
+                        document.body.removeChild(modal);
+                    }, 250);
+                } else {
+                    showNotification('Please fill all required fields', 'error');
+                }
+            });
+        }
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+
+            // Set styles based on type
+            let bgColor, icon;
+            if (type === 'success') {
+                bgColor = '#2ecc71';
+                icon = 'fas fa-check-circle';
+            } else if (type === 'error') {
+                bgColor = '#e74c3c';
+                icon = 'fas fa-exclamation-circle';
+            } else {
+                bgColor = '#3498db';
+                icon = 'fas fa-info-circle';
+            }
+
+            notification.style.cssText = `
+                position: fixed;
+                top: 30px;
+                right: 30px;
+                background: ${bgColor};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                display: flex;
+                align-items: center;
+                z-index: 1001;
+                animation: notificationSlideIn 0.3s ease;
+            `;
+
+            notification.innerHTML = `
+                <i class="${icon}" style="margin-right: 10px; font-size: 1.2rem;"></i>
+                <span>${message}</span>
+            `;
+
+            document.body.appendChild(notification);
+
+            // Add animation keyframes
+            const style = document.createElement('style');
+            if (!document.querySelector('#notification-styles')) {
+                style.id = 'notification-styles';
+                style.textContent = `
+                    @keyframes notificationSlideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    
+                    @keyframes notificationSlideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                }
+                `;
+                document.head.appendChild(style);
+            }
+
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'notificationSlideOut 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Add some interactive animations to stat cards
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                const icon = this.querySelector('.stat-icon');
+                icon.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                const icon = this.querySelector('.stat-icon');
+                icon.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+
+        // Initialize with a welcome message after loading
+        setTimeout(() => {
+            showNotification('Welcome to Binara Pawning Center Admin Dashboard!', 'success');
+        }, 2500);
+    </script>
+</body>
+
+</html>
